@@ -21,7 +21,7 @@ class Functor
         return new static(function () {
             static $memoized = []; 
             $args = func_get_args();
-            $key = md5(serialize($args));
+            $key = md5(var_export($args, true));
             if (!array_key_exists($key, $memoized)) {
                 $memoized[$key] = call_user_func_array($this,$args);
             }
