@@ -23,7 +23,7 @@ class Functor
             $args = func_get_args();
             $key = md5(serialize($args));
             if (!array_key_exists($key, $memoized)) {
-                $memoized[$key] = $this($args);
+                $memoized[$key] = call_user_func_array($this,$args);
             }
 
             return $memoized[$key];
@@ -33,7 +33,8 @@ class Functor
 
     public function curry()
     {
-        
+       $args = func_get_args();
+       return new static(function () {}); 
     }
 
     public function curryRight()
@@ -43,7 +44,10 @@ class Functor
     
     public function compose(callable $fn)
     {
-        
+        return new static(function () use (&$fn) {
+            $args = func_get_args();
+            return $fn(call_user_func_array($this, $args));
+        }); 
     }
     
     public function fn()
