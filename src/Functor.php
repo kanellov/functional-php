@@ -19,40 +19,37 @@ class Functor
     public function memoize()
     {
         return new static(function () {
-            static $memoized = []; 
+            static $memoized = [];
             $args = func_get_args();
             $key = md5(var_export($args, true));
             if (!array_key_exists($key, $memoized)) {
-                $memoized[$key] = call_user_func_array($this,$args);
+                $memoized[$key] = call_user_func_array($this, $args);
             }
 
             return $memoized[$key];
         });
     }
 
-
-    public function curry()
-    {
-       $args = func_get_args();
-       return new static(function () {}); 
-    }
-
-    public function curryRight()
-    {
-
-    }
-    
     public function compose(callable $fn)
     {
         return new static(function () use (&$fn) {
             $args = func_get_args();
+
             return $fn(call_user_func_array($this, $args));
-        }); 
+        });
     }
-    
+
+    public function wrap(callable $fn)
+    {
+        return new static(function () use (&$fn) {
+            $args = array_merge([$this], func_get_args());
+
+            return call_user_func_array($fn, $args);
+        });
+    }
+
     public function fn()
     {
         return $this->fn;
     }
 }
-
