@@ -2,25 +2,30 @@
 
 namespace KnlvTest\Functional;
 
-use Knlv\Functional\Functor;
+use Knlv\Functional\F;
 
-class FunctorTest extends \PHPUnit_Framework_TestCase
+class FTest extends \PHPUnit_Framework_TestCase
 {
     public function testContructorSetsCallable()
     {
         $callable = function () {};
-        $functor = new Functor($callable);
+        $functor = new F($callable);
         $this->assertAttributeSame($callable, 'fn', $functor);
     }
 
-
-    public function testFnMethodReturnWrappedCallable()
+    public function testCreateMethod()
     {
         $callable = function () {};
-        $functor = new Functor($callable);
-        $this->assertSame($callable, $functor->fn());
+        $functor = F::create($callable);
+        $this->assertAttributeSame($callable, 'fn', $functor);
     }
 
+    public function testExtractMethodReturnWrappedCallable()
+    {
+        $callable = function () {};
+        $functor = new F($callable);
+        $this->assertSame($callable, $functor->extract());
+    }
 
     public function testInvokeMethod()
     {
@@ -28,10 +33,9 @@ class FunctorTest extends \PHPUnit_Framework_TestCase
         $callable    = function () use ($returnValue) {
             return $returnValue;
         };
-        $functor = new Functor($callable);
+        $functor = new F($callable);
         $this->assertSame($returnValue, $functor());
     }
-
 
     public function testMemoizeMethod()
     {
@@ -41,7 +45,7 @@ class FunctorTest extends \PHPUnit_Framework_TestCase
 
             return $arg;
         };
-        $functor = new Functor($callable);
+        $functor = new F($callable);
         $this->assertEquals('a', $functor('a'));
         $this->assertEquals(1, $countCalls);
 
@@ -64,7 +68,7 @@ class FunctorTest extends \PHPUnit_Framework_TestCase
             return $b * $b;
         };
 
-        $functor = new Functor($callable1);
+        $functor = new F($callable1);
         $this->assertEquals(6, $functor(5));
 
         $composed = $functor->compose($callable2);
@@ -81,7 +85,7 @@ class FunctorTest extends \PHPUnit_Framework_TestCase
         $wrapper = function ($fn, $b) {
             return 'The ' . $fn($b) . '!';
         };
-        $functor = new Functor($callable);
+        $functor = new F($callable);
         $this->assertEquals('arg is 5', $functor(5));
         $wrapped = $functor->wrap($wrapper);
         $this->assertEquals('The arg is 6!', $wrapped(6));
@@ -92,7 +96,7 @@ class FunctorTest extends \PHPUnit_Framework_TestCase
         $callable = function ($a, $b) {
             return $a + $b;
         };
-        $functor = new Functor($callable);
+        $functor = new F($callable);
         $curried = $functor->curry(5);
         $this->assertEquals(8, $curried(3));
         $this->setExpectedException('PHPUnit_Framework_Error');
@@ -104,7 +108,7 @@ class FunctorTest extends \PHPUnit_Framework_TestCase
         $callable = function ($a, $b) {
             return $a + $b;
         };
-        $functor = new Functor($callable);
+        $functor = new F($callable);
         $curried = $functor->curryRight(5);
         $this->assertEquals(8, $curried(3));
         $this->setExpectedException('PHPUnit_Framework_Error');

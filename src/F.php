@@ -2,13 +2,18 @@
 
 namespace Knlv\Functional;
 
-class Functor
+class F
 {
     protected $fn;
 
     public function __construct(callable $fn)
     {
         $this->fn = $fn;
+    }
+
+    public static function create(callable $fn)
+    {
+        return new static($fn);
     }
 
     public function __invoke()
@@ -72,7 +77,7 @@ class Functor
         });
     }
 
-    public function fn()
+    public function extract()
     {
         return $this->fn;
     }
