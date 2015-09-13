@@ -86,4 +86,28 @@ class FunctorTest extends \PHPUnit_Framework_TestCase
         $wrapped = $functor->wrap($wrapper);
         $this->assertEquals('The arg is 6!', $wrapped(6));
     }
+
+    public function testCurryMethod()
+    {
+        $callable = function ($a, $b) {
+            return $a + $b;
+        };
+        $functor = new Functor($callable);
+        $curried = $functor->curry(5);
+        $this->assertEquals(8, $curried(3));
+        $this->setExpectedException('PHPUnit_Framework_Error');
+        $curried();
+    }
+
+    public function testCurryRightMethod()
+    {
+        $callable = function ($a, $b) {
+            return $a + $b;
+        };
+        $functor = new Functor($callable);
+        $curried = $functor->curryRight(5);
+        $this->assertEquals(8, $curried(3));
+        $this->setExpectedException('PHPUnit_Framework_Error');
+        $curried();
+    }
 }

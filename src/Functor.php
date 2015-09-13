@@ -48,6 +48,30 @@ class Functor
         });
     }
 
+    public function curry()
+    {
+        $args = func_get_args();
+
+        return new static(function () use ($args) {
+            return call_user_func_array($this, array_merge(
+                $args,
+                func_get_args()
+            ));
+        });
+    }
+
+    public function curryRight()
+    {
+        $args = func_get_args();
+
+        return new static(function () use ($args) {
+            return call_user_func_array($this, array_merge(
+                func_get_args(),
+                $args
+            ));
+        });
+    }
+
     public function fn()
     {
         return $this->fn;
