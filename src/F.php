@@ -77,6 +77,18 @@ class F
         });
     }
 
+    public function trampoline()
+    {
+        return new static(function () {
+            $return = call_user_func_array($this, func_get_args());
+            while (is_callable($return)) {
+                $return = call_user_func($return);
+            }
+
+            return $return;
+        });
+    }
+
     public function extract()
     {
         return $this->fn;
