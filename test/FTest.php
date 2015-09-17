@@ -103,8 +103,6 @@ class FTest extends \PHPUnit_Framework_TestCase
         $curried = $functor->curry(10);
         $this->assertInstanceOf('\Knlv\Functional\F', $curried);
         $this->assertEquals(5, $curried(2));
-        $this->setExpectedException('\Exception');
-        $curried();
     }
 
     public function testCurryRightMethod()
@@ -117,8 +115,6 @@ class FTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Knlv\Functional\F', $curried);
         $this->assertEquals(0, $curried(4));
         $this->assertEquals(1, $curried(3));
-        $this->setExpectedException('PHPUnit_Framework_Error');
-        $curried();
     }
 
     public function testTrampolineMethod()
