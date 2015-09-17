@@ -103,7 +103,7 @@ class FTest extends \PHPUnit_Framework_TestCase
         $curried = $functor->curry(10);
         $this->assertInstanceOf('\Knlv\Functional\F', $curried);
         $this->assertEquals(5, $curried(2));
-        $this->setExpectedException('PHPUnit_Framework_Error');
+        $this->setExpectedException('\Exception');
         $curried();
     }
 
